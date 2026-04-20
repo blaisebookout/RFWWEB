@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Run Fight Win — Couch to 5K Training App</title>
+  <meta name="description" content="Run Fight Win is an 8-week Couch to 5K training app with AI voice coaching, GPS tracking, achievement badges, and weekly devotions. Get off the couch and cross the finish line." />
+  <link rel="canonical" href="https://legacyofthorns.com/RFW/" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ── TOKENS ─────────────────────────────────────────────── */
+    :root {
+      --pink:   #FF009A;
+      --green:  #B3E619;
+      --orange: #F19D19;
+      --bg:     #0A0A0A;
+      --surface:#141414;
+      --border: rgba(255,255,255,0.08);
+      --text:   #F5F5F5;
+      --muted:  #888;
+      --radius: 16px;
+    }
+
+    /* ── RESET ──────────────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 16px;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    img { display: block; max-width: 100%; }
+    a { color: inherit; text-decoration: none; }
+    button { cursor: pointer; border: none; background: none; font: inherit; }
+
+    /* ── UTILITY ────────────────────────────────────────────── */
+    .container { max-width: 1100px; margin: 0 auto; padding: 0 24px; }
+    .pill {
+      display: inline-block;
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 999px;
+      border: 1px solid currentColor;
+      margin-bottom: 16px;
+    }
+    .pill--pink   { color: var(--pink);   border-color: var(--pink);   }
+    .pill--green  { color: var(--green);  border-color: var(--green);  }
+    .pill--orange { color: var(--orange); border-color: var(--orange); }
+
+    section { padding: 100px 0; }
+
+    /* ── NAV ────────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 18px 0;
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      background: rgba(10,10,10,0.75);
+    }
+    .nav-inner {
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .logo {
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: 1px;
+    }
+    .logo span.run   { color: var(--green); }
+    .logo span.fight { color: var(--pink); font-weight: 400; }
+    .logo span.win   { color: var(--orange); }
+    .nav-links { display: flex; gap: 32px; align-items: center; }
+    .nav-links a {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--pink);
+      color: #fff !important;
+      padding: 8px 20px;
+      border-radius: 8px;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      transition: opacity 0.2s !important;
+    }
+    .nav-cta:hover { opacity: 0.85; }
+    @media (max-width: 600px) {
+      .nav-links a:not(.nav-cta) { display: none; }
+    }
+
+    /* ── HERO ───────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding-top: 80px;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+    }
+    @media (max-width: 768px) {
+      .hero-grid { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+    }
+    .hero-eyebrow {
+      font-family: 'Oswald', sans-serif;
+      font-size: 12px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--pink);
+      margin-bottom: 20px;
+    }
+    .hero-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(52px, 7vw, 88px);
+      line-height: 0.95;
+      font-weight: 700;
+      margin-bottom: 28px;
+    }
+    .hero-title .run   { color: var(--green);  display: block; }
+    .hero-title .fight { color: var(--pink);   display: block; font-weight: 400; }
+    .hero-title .win   { color: var(--orange); display: block; }
+    .hero-subtitle {
+      font-size: 18px;
+      font-weight: 300;
+      color: var(--muted);
+      max-width: 420px;
+      margin-bottom: 40px;
+      line-height: 1.7;
+    }
+    .hero-subtitle strong { color: var(--text); font-weight: 500; }
+    .hero-btns { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--pink);
+      color: #fff;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 1px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.88; transform: translateY(-1px); }
+    .btn-secondary {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: transparent;
+      color: var(--text);
+      font-family: 'Oswald', sans-serif;
+      font-weight: 600;
+      font-size: 15px;
+      letter-spacing: 1px;
+      padding: 14px 28px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .btn-secondary:hover { border-color: var(--muted); transform: translateY(-1px); }
+
+    /* phone mockup */
+    .hero-visual {
+      display: flex; justify-content: center; align-items: center;
+      position: relative;
+    }
+    .phone {
+      width: 260px; height: 520px;
+      border-radius: 44px;
+      background: var(--surface);
+      border: 2px solid var(--border);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 40px 100px rgba(255,0,154,0.25), 0 0 0 1px rgba(255,255,255,0.06);
+      animation: float 4s ease-in-out infinite;
+    }
+    @keyframes float {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-14px); }
+    }
+    .phone-notch {
+      width: 100px; height: 28px;
+      background: #000;
+      border-radius: 0 0 18px 18px;
+      margin: 0 auto;
+      position: relative; z-index: 2;
+    }
+    .phone-screen {
+      padding: 0 16px 20px;
+      height: calc(100% - 28px);
+      display: flex; flex-direction: column; gap: 12px;
+      overflow: hidden;
+    }
+    .phone-logo {
+      font-family: 'Oswald', sans-serif; font-size: 14px; font-weight: 700;
+      padding: 10px 0 4px;
+      display: flex; gap: 2px;
+    }
+    .phone-logo .r { color: var(--green); }
+    .phone-logo .f { color: var(--pink); font-weight: 400; }
+    .phone-logo .w { color: var(--orange); }
+    .stat-row {
+      display: grid; grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+    .stat-box {
+      background: rgba(255,255,255,0.05);
+      border-radius: 10px;
+      padding: 10px 8px;
+      text-align: center;
+    }
+    .stat-box .val {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px; font-weight: 700;
+    }
+    .stat-box .lbl { font-size: 9px; color: var(--muted); margin-top: 2px; }
+    .workout-card {
+      background: rgba(255,0,154,0.1);
+      border: 1px solid rgba(255,0,154,0.25);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .wc-title { font-family: 'Oswald', sans-serif; font-size: 13px; font-weight: 700; }
+    .wc-sub { font-size: 10px; color: var(--muted); margin-top: 2px; }
+    .interval-bar {
+      display: flex; gap: 3px; margin-top: 8px;
+    }
+    .seg {
+      height: 6px; border-radius: 3px; flex: 1;
+    }
+    .seg.run  { background: var(--pink); }
+    .seg.walk { background: var(--orange); }
+    .seg.warm { background: var(--green); }
+    .badge-row {
+      display: flex; gap: 8px; padding: 2px 0;
+    }
+    .badge-chip {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 16px;
+    }
+    .badge-chip.earned { opacity: 1; }
+    .badge-chip.locked { opacity: 0.25; filter: grayscale(1); }
+    .run-btn {
+      background: var(--pink);
+      color: #fff;
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px; font-weight: 700; letter-spacing: 1px;
+      border-radius: 10px;
+      padding: 12px;
+      text-align: center;
+      margin-top: auto;
+    }
+
+    /* noise overlay */
+    #hero::before {
+      content:'';
+      position: absolute; inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.03;
+      pointer-events: none;
+    }
+    /* glow blobs */
+    .blob {
+      position: absolute; border-radius: 50%;
+      filter: blur(120px); pointer-events: none;
+      animation: blobMove 10s ease-in-out infinite alternate;
+    }
+    .blob1 { width:500px; height:500px; background:rgba(255,0,154,0.12); top:-100px; right:-100px; }
+    .blob2 { width:400px; height:400px; background:rgba(179,230,25,0.08); bottom:-80px; left:-80px; animation-delay: 3s; }
+    @keyframes blobMove {
+      from { transform: translate(0,0) scale(1); }
+      to   { transform: translate(30px,20px) scale(1.05); }
+    }
+
+    /* ── STATS STRIP ────────────────────────────────────────── */
+    .stats-strip {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 40px 0;
+    }
+    .stats-inner {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 24px; text-align: center;
+    }
+    @media (max-width: 600px) {
+      .stats-inner { grid-template-columns: 1fr 1fr; }
+    }
+    .stat-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 42px; font-weight: 700;
+    }
+    .stat-label { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+    /* ── FEATURES ───────────────────────────────────────────── */
+    .section-header { text-align: center; margin-bottom: 64px; }
+    .section-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 700; line-height: 1.05;
+    }
+    .section-sub {
+      color: var(--muted); font-size: 17px; margin-top: 14px;
+      max-width: 500px; margin-left: auto; margin-right: auto;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    @media (max-width: 900px) { .features-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 560px) { .features-grid { grid-template-columns: 1fr; } }
+
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .feature-card:hover { transform: translateY(-4px); }
+    .feature-card:hover .fc-icon { transform: scale(1.08); }
+    .fc-icon {
+      width: 48px; height: 48px;
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 16px;
+      transition: transform 0.25s;
+    }
+    .fc-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: 18px; font-weight: 600;
+      margin-bottom: 8px;
+    }
+    .fc-desc { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* accent borders per card */
+    .fc--pink   { border-color: rgba(255,0,154,0.2); }
+    .fc--green  { border-color: rgba(179,230,25,0.2); }
+    .fc--orange { border-color: rgba(241,157,25,0.2); }
+    .fc--pink:hover   { border-color: rgba(255,0,154,0.5); }
+    .fc--green:hover  { border-color: rgba(179,230,25,0.5); }
+    .fc--orange:hover { border-color: rgba(241,157,25,0.5); }
+
+    /* ── PRICING ────────────────────────────────────────────── */
+    #pricing { background: rgba(255,255,255,0.015); }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px; align-items: start;
+    }
+    @media (max-width: 768px) { .pricing-grid { grid-template-columns: 1fr; } }
+
+    .plan-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      position: relative;
+    }
+    .plan-card.featured {
+      border-color: var(--orange);
+      box-shadow: 0 0 40px rgba(241,157,25,0.15);
+    }
+    .plan-badge {
+      position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+      background: var(--orange); color: #000;
+      font-family: 'Oswald', sans-serif; font-size: 11px; font-weight: 700;
+      letter-spacing: 2px; padding: 4px 16px; border-radius: 999px;
+    }
+    .plan-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 8px;
+    }
+    .plan-price {
+      font-family: 'Oswald', sans-serif;
+      font-size: 44px; font-weight: 700; line-height: 1;
+    }
+    .plan-period { font-size: 14px; color: var(--muted); margin-top: 4px; margin-bottom: 24px; }
+    .plan-features { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .plan-features li {
+      font-size: 14px; display: flex; gap: 10px; align-items: flex-start;
+    }
+    .plan-features li::before {
+      content: '✓'; font-weight: 700;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .plan-card:not(.featured) .plan-features li::before { color: var(--muted); }
+    .plan-card.featured .plan-features li::before { color: var(--orange); }
+    .plan-cta {
+      display: block; margin-top: 28px;
+      text-align: center;
+      font-family: 'Oswald', sans-serif; font-weight: 600; font-size: 15px; letter-spacing: 1px;
+      padding: 13px; border-radius: 10px;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .plan-cta:hover { opacity: 0.85; transform: translateY(-1px); }
+    .plan-cta.pink   { background: var(--pink);   color: #fff; }
+    .plan-cta.orange { background: var(--orange); color: #000; }
+    .plan-cta.green  { background: var(--green);  color: #000; }
+
+    /* ── WEEKS ──────────────────────────────────────────────── */
+    .weeks-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+    }
+    @media (max-width: 900px) { .weeks-grid { grid-template-columns: 1fr 1fr; } }
+    @media (max-width: 480px) { .weeks-grid { grid-template-columns: 1fr; } }
+
+    .week-card {
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid var(--border);
+      position: relative; overflow: hidden;
+    }
+    .wk-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 6px;
+    }
+    .wk-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 17px; font-weight: 600;
+    }
+    .wk-glow {
+      position: absolute; bottom: -30px; right: -30px;
+      width: 80px; height: 80px; border-radius: 50%;
+      filter: blur(30px); opacity: 0.35;
+    }
+
+    /* ── FAQ ────────────────────────────────────────────────── */
+    #faq { background: rgba(255,255,255,0.015); }
+    .faq-list { max-width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 0; }
+    .faq-item {
+      border-bottom: 1px solid var(--border);
+    }
+    .faq-q {
+      width: 100%; text-align: left;
+      display: flex; justify-content: space-between; align-items: center; gap: 16px;
+      padding: 22px 0;
+      font-family: 'Oswald', sans-serif;
+      font-size: 17px; font-weight: 600; color: var(--text);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .faq-q:hover { color: var(--pink); }
+    .faq-arrow {
+      width: 22px; height: 22px; flex-shrink: 0;
+      border: 1px solid var(--border); border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 14px; transition: transform 0.3s, background 0.2s;
+    }
+    .faq-item.open .faq-arrow { transform: rotate(45deg); background: var(--pink); border-color: var(--pink); }
+    .faq-a {
+      max-height: 0; overflow: hidden;
+      font-size: 15px; color: var(--muted); line-height: 1.7;
+      transition: max-height 0.35s ease, padding 0.2s;
+    }
+    .faq-item.open .faq-a { max-height: 300px; padding-bottom: 20px; }
+
+    /* ── SUPPORT ────────────────────────────────────────────── */
+    .support-wrap {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 60px; align-items: start;
+    }
+    @media (max-width: 768px) { .support-wrap { grid-template-columns: 1fr; } }
+    .support-info h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(28px, 4vw, 42px); font-weight: 700; line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .support-info p { color: var(--muted); font-size: 15px; line-height: 1.7; margin-bottom: 24px; }
+    .contact-detail {
+      display: flex; gap: 12px; align-items: center;
+      font-size: 14px; color: var(--muted); margin-bottom: 12px;
+    }
+    .contact-detail span { font-size: 18px; }
+
+    /* form */
+    .support-form { display: flex; flex-direction: column; gap: 16px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @media (max-width: 480px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-group label { font-size: 12px; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 16px;
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 15px;
+      outline: none;
+      transition: border-color 0.2s;
+      resize: none;
+      -webkit-appearance: none;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: var(--muted); }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus { border-color: var(--pink); }
+    .form-group select option { background: #1a1a1a; }
+    .submit-btn {
+      background: var(--pink); color: #fff;
+      font-family: 'Oswald', sans-serif; font-weight: 600;
+      font-size: 15px; letter-spacing: 1px;
+      padding: 14px 28px; border-radius: 10px;
+      transition: opacity 0.2s, transform 0.2s;
+      align-self: flex-start;
+    }
+    .submit-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+    .form-success {
+      display: none;
+      background: rgba(179,230,25,0.1); border: 1px solid rgba(179,230,25,0.3);
+      border-radius: 12px; padding: 20px;
+      text-align: center; color: var(--green);
+      font-family: 'Oswald', sans-serif; font-size: 16px;
+    }
+
+    /* ── FOOTER ─────────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 48px 0 32px;
+    }
+    .footer-inner {
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px;
+    }
+    .footer-logo {
+      font-family: 'Oswald', sans-serif; font-size: 22px; font-weight: 700;
+    }
+    .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
+    .footer-links a { font-size: 13px; color: var(--muted); transition: color 0.2s; }
+    .footer-links a:hover { color: var(--text); }
+    .footer-copy { font-size: 12px; color: var(--muted); width: 100%; margin-top: 24px; text-align: center; }
+
+    /* ── ANIMATIONS ─────────────────────────────────────────── */
+    .reveal {
+      opacity: 0; transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="container nav-inner">
+    <div class="logo">
+      <span class="run">RUN</span>&nbsp;<span class="fight">FIGHT</span>&nbsp;<span class="win">WIN</span>
+    </div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#plan">Training Plan</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+      <a href="#support" class="nav-cta">Support</a>
+    </div>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="blob blob1"></div>
+  <div class="blob blob2"></div>
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <p class="hero-eyebrow">8-Week Couch to 5K · iOS App</p>
+      <h1 class="hero-title">
+        <span class="run">RUN</span>
+        <span class="fight">FIGHT</span>
+        <span class="win">WIN</span>
+      </h1>
+      <p class="hero-subtitle">
+        Go from the couch to your first 5K in <strong>8 weeks</strong>. AI voice coaching, GPS route tracking, achievement badges, and weekly devotions — everything you need to cross that finish line.
+      </p>
+      <div class="hero-btns">
+        <a href="#" class="btn-primary">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.8-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/></svg>
+          Download on the App Store
+        </a>
+        <a href="#features" class="btn-secondary">See Features ↓</a>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="phone">
+        <div class="phone-notch"></div>
+        <div class="phone-screen">
+          <div class="phone-logo">
+            <span class="r">RUN</span>&nbsp;<span class="f">FIGHT</span>&nbsp;<span class="w">WIN</span>
+          </div>
+          <div class="stat-row">
+            <div class="stat-box"><div class="val" style="color:var(--pink)">12</div><div class="lbl">Runs Done</div></div>
+            <div class="stat-box"><div class="val" style="color:var(--green)">18.4</div><div class="lbl">Miles</div></div>
+            <div class="stat-box"><div class="val" style="color:var(--orange)">Wk 4</div><div class="lbl">Progress</div></div>
+          </div>
+          <div class="workout-card">
+            <div class="wc-title">Week 4 · Day 2</div>
+            <div class="wc-sub">Holding Strong · 31 min</div>
+            <div class="interval-bar">
+              <div class="seg warm"></div>
+              <div class="seg run"></div><div class="seg walk"></div>
+              <div class="seg run"></div><div class="seg walk"></div>
+              <div class="seg run"></div><div class="seg walk"></div>
+              <div class="seg warm" style="background:var(--orange)"></div>
+            </div>
+          </div>
+          <div class="badge-row">
+            <div class="badge-chip earned" style="background:rgba(179,230,25,0.15)">🏅</div>
+            <div class="badge-chip earned" style="background:rgba(255,0,154,0.15)">⚡</div>
+            <div class="badge-chip earned" style="background:rgba(241,157,25,0.15)">🔥</div>
+            <div class="badge-chip locked" style="background:rgba(255,255,255,0.05)">🏆</div>
+            <div class="badge-chip locked" style="background:rgba(255,255,255,0.05)">👑</div>
+            <div class="badge-chip locked" style="background:rgba(255,255,255,0.05)">🎯</div>
+          </div>
+          <div class="run-btn">START TODAY'S RUN →</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div class="container">
+    <div class="stats-inner">
+      <div>
+        <div class="stat-num" style="color:var(--green)">8</div>
+        <div class="stat-label">Weeks to Your 5K</div>
+      </div>
+      <div>
+        <div class="stat-num" style="color:var(--pink)">3</div>
+        <div class="stat-label">Workouts per Week</div>
+      </div>
+      <div>
+        <div class="stat-num" style="color:var(--orange)">6</div>
+        <div class="stat-label">Achievement Badges</div>
+      </div>
+      <div>
+        <div class="stat-num" style="color:var(--green)">0→5K</div>
+        <div class="stat-label">No Experience Needed</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="pill pill--pink">App Features</div>
+      <h2 class="section-title">Everything you need.<br>Nothing you don't.</h2>
+      <p class="section-sub">Built for beginners. Tough enough for fighters.</p>
+    </div>
+    <div class="features-grid">
+
+      <div class="feature-card fc--green reveal">
+        <div class="fc-icon" style="background:rgba(179,230,25,0.12)">🎙️</div>
+        <h3 class="fc-title">AI Voice Coaching</h3>
+        <p class="fc-desc">Choose your coach — John or Samantha. Real-time audio cues guide every interval so you never have to glance at your phone mid-run.</p>
+      </div>
+
+      <div class="feature-card fc--pink reveal">
+        <div class="fc-icon" style="background:rgba(255,0,154,0.12)">📍</div>
+        <h3 class="fc-title">GPS Route Tracking</h3>
+        <p class="fc-desc">See your route come alive on a live map as you run. Full route playback and a shareable run summary when you finish.</p>
+      </div>
+
+      <div class="feature-card fc--orange reveal">
+        <div class="fc-icon" style="background:rgba(241,157,25,0.12)">⏱️</div>
+        <h3 class="fc-title">Smart Interval Timer</h3>
+        <p class="fc-desc">Color-coded phase bars show exactly where you are in each workout — warm-up, run, walk, cooldown — at a glance.</p>
+      </div>
+
+      <div class="feature-card fc--orange reveal">
+        <div class="fc-icon" style="background:rgba(241,157,25,0.12)">🏅</div>
+        <h3 class="fc-title">Achievement Badges</h3>
+        <p class="fc-desc">Earn six milestone badges as you progress from First Step through Win Your Race. Each badge celebrates a real achievement.</p>
+      </div>
+
+      <div class="feature-card fc--pink reveal">
+        <div class="fc-icon" style="background:rgba(255,0,154,0.12)">📖</div>
+        <h3 class="fc-title">Weekly Devotions</h3>
+        <p class="fc-desc">Each week unlocks a new devotion to keep you mentally strong — because finishing a 5K is as much about your mind as your legs.</p>
+      </div>
+
+      <div class="feature-card fc--green reveal">
+        <div class="fc-icon" style="background:rgba(179,230,25,0.12)">🎵</div>
+        <h3 class="fc-title">Music Integration</h3>
+        <p class="fc-desc">Connect Apple Music, Spotify, YouTube Music, or Pandora. Audio ducks automatically when your coach speaks so you never miss a cue.</p>
+      </div>
+
+      <div class="feature-card fc--green reveal">
+        <div class="fc-icon" style="background:rgba(179,230,25,0.12)">🌧️</div>
+        <h3 class="fc-title">Live Weather Radar</h3>
+        <p class="fc-desc">Check rain radar right inside the map view before you head out. No need to switch apps to decide if it's safe to run.</p>
+      </div>
+
+      <div class="feature-card fc--orange reveal">
+        <div class="fc-icon" style="background:rgba(241,157,25,0.12)">↩️</div>
+        <h3 class="fc-title">Turn Back Options</h3>
+        <p class="fc-desc">Set a time-based or distance-based turn-back alert so you never end up too far from home at the end of a run. Pro feature.</p>
+      </div>
+
+      <div class="feature-card fc--pink reveal">
+        <div class="fc-icon" style="background:rgba(255,0,154,0.12)">📤</div>
+        <h3 class="fc-title">Run Sharing</h3>
+        <p class="fc-desc">Snap a post-run selfie, overlay your stats on one of five gradient backgrounds, and share straight to your social feed.</p>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- TRAINING PLAN -->
+<section id="plan">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="pill pill--green">The Journey</div>
+      <h2 class="section-title">8 weeks. 24 workouts.<br>1 finish line.</h2>
+      <p class="section-sub">Each week builds on the last — more run time, less walk time, more confidence.</p>
+    </div>
+    <div class="weeks-grid">
+      <div class="week-card reveal" style="background:rgba(179,230,25,0.07);border-color:rgba(179,230,25,0.2)">
+        <div class="wk-num">Week 1</div>
+        <div class="wk-name">Step Out</div>
+        <div class="wk-glow" style="background:var(--green)"></div>
+      </div>
+      <div class="week-card reveal" style="background:rgba(255,0,154,0.07);border-color:rgba(255,0,154,0.2)">
+        <div class="wk-num">Week 2</div>
+        <div class="wk-name">Building Momentum</div>
+        <div class="wk-glow" style="background:var(--pink)"></div>
+      </div>
+      <div class="week-card reveal" style="background:rgba(241,157,25,0.07);border-color:rgba(241,157,25,0.2)">
+        <div class="wk-num">Week 3</div>
+        <div class="wk-name">Pushing Limits</div>
+        <div class="wk-glow" style="background:var(--orange)"></div>
+      </div>
+      <div class="week-card reveal" style="background:rgba(179,230,25,0.07);border-color:rgba(179,230,25,0.2)">
+        <div class="wk-num">Week 4</div>
+        <div class="wk-name">Holding Strong</div>
+        <div class="wk-glow" style="background:var(--green)"></div>
+      </div>
+      <div class="week-card reveal" style="background:rgba(255,0,154,0.07);border-color:rgba(255,0,154,0.2)">
+        <div class="wk-num">Week 5</div>
+        <div class="wk-name">Fight to the End</div>
+        <div class="wk-glow" style="background:var(--pink)"></div>
+      </div>
+      <div class="week-card reveal" style="background:rgba(241,157,25,0.07);border-color:rgba(241,157,25,0.2)">
+        <div class="wk-num">Week 6</div>
+        <div class="wk-name">Go the Distance</div>
+        <div class="wk-glow" style="background:var(--orange)"></div>
+      </div>
+      <div class="week-card reveal" style="background:rgba(179,230,25,0.07);border-color:rgba(179,230,25,0.2)">
+        <div class="wk-num">Week 7</div>
+        <div class="wk-name">Home Stretch</div>
+        <div class="wk-glow" style="background:var(--green)"></div>
+      </div>
+      <div class="week-card reveal" style="background:rgba(255,0,154,0.1);border-color:rgba(255,0,154,0.4)">
+        <div class="wk-num">Week 8</div>
+        <div class="wk-name" style="color:var(--pink)">5K — You Did It!</div>
+        <div class="wk-glow" style="background:var(--pink); opacity:0.6"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="pill pill--orange">Pricing</div>
+      <h2 class="section-title">Start free.<br>Go pro when you're ready.</h2>
+      <p class="section-sub">The full 8-week program is free. Pro unlocks everything else.</p>
+    </div>
+    <div class="pricing-grid">
+
+      <div class="plan-card reveal">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price">Free</div>
+        <div class="plan-period">forever</div>
+        <ul class="plan-features">
+          <li>Full 8-week Couch to 5K program</li>
+          <li>AI voice coaching (John &amp; Samantha)</li>
+          <li>Run tracking &amp; route map</li>
+          <li>Achievement badges</li>
+          <li>Dashboard stats</li>
+        </ul>
+        <a href="#" class="plan-cta pink">Download Free</a>
+      </div>
+
+      <div class="plan-card featured reveal">
+        <div class="plan-badge">MOST POPULAR</div>
+        <div class="plan-name">Pro Runner</div>
+        <div class="plan-price" style="color:var(--orange)">$4.99</div>
+        <div class="plan-period">per month</div>
+        <ul class="plan-features">
+          <li>Everything in Starter</li>
+          <li>Premium AI voices (20+ options)</li>
+          <li>Weekly devotions &amp; motivation</li>
+          <li>Unlimited bonus themed runs</li>
+          <li>Advanced stats &amp; pace analysis</li>
+          <li>Turn Back Options safety alerts</li>
+          <li>Ad-free experience</li>
+        </ul>
+        <a href="#" class="plan-cta orange">Get Pro Runner</a>
+      </div>
+
+      <div class="plan-card reveal">
+        <div class="plan-name">Champion</div>
+        <div class="plan-price" style="color:var(--green)">$29.99</div>
+        <div class="plan-period">per year — save 50%</div>
+        <ul class="plan-features">
+          <li>Everything in Pro Runner</li>
+          <li>Post-5K training plans (10K, Half)</li>
+          <li>Heart rate zone training</li>
+          <li>Community challenges &amp; leaderboards</li>
+          <li>Priority new feature access</li>
+          <li>Exclusive Champion badge</li>
+        </ul>
+        <a href="#" class="plan-cta green">Get Champion</a>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="pill pill--pink">FAQ</div>
+      <h2 class="section-title">Common questions.</h2>
+    </div>
+    <div class="faq-list">
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          Do I need any running experience to start?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          Not at all. Run Fight Win is built from the ground up for complete beginners. Week 1 starts with short 60-second run intervals broken up by walking rest periods. The program gradually builds your endurance every week so your body has time to adapt without injury.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          Is the full 8-week program really free?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          Yes. Week 1 is fully unlocked for everyone. The complete 8-week Couch to 5K program is available on the free Starter tier. Pro and Champion subscriptions add premium features like bonus themed runs, advanced stats, devotions, and more — but you can absolutely run your first 5K without spending a dime.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          What iOS version and device do I need?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          Run Fight Win requires iOS 17 or later. It works on iPhone models that support iOS 17, which includes iPhone XS and newer. GPS tracking and live map features require a physical device — they won't work in the iOS Simulator.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          Can I use my own music while running?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          Yes. Run Fight Win integrates with Apple Music, Spotify, YouTube Music, and Pandora. Your music plays in the background and automatically ducks (lowers volume) whenever your AI coach delivers a voice cue, then returns to full volume when the cue finishes.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          What are the "Bonus Runs" in the Pro plan?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          Bonus Runs are themed interval workouts outside the main 8-week program — think Lightning Runs, Color Runs, and Nature Runs. They're a fun way to shake up your training routine and keep things fresh once you've built a solid base. Pro subscribers get unlimited access to all bonus run themes, including new ones as they're added.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          How does the Turn Back Options feature work?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          Turn Back Options is a Pro safety feature that alerts you when it's time to head back home. You can set a time-based alert (e.g., turn around at the halfway point of your run time) or a distance-based alert. Your AI coach will give you a voice cue, and the app will calculate the best time for you to reverse direction so you finish close to your starting point.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          Can I run on a treadmill or does it require GPS?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          You can absolutely use Run Fight Win on a treadmill. The interval timer and AI voice coaching work completely independently of GPS. Route tracking and the live map will simply show no movement, but all coaching, timing, badges, and progress tracking work exactly the same indoors.
+        </div>
+      </div>
+
+      <div class="faq-item">
+        <button class="faq-q" aria-expanded="false">
+          How do I cancel my Pro or Champion subscription?
+          <span class="faq-arrow">+</span>
+        </button>
+        <div class="faq-a">
+          Subscriptions are managed through Apple's App Store. To cancel, go to Settings → Your Name → Subscriptions on your iPhone, find Run Fight Win, and tap Cancel Subscription. You'll retain Pro access until the end of your current billing period. We never charge cancellation fees.
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- SUPPORT -->
+<section id="support">
+  <div class="container">
+    <div class="support-wrap">
+      <div class="support-info reveal">
+        <div class="pill pill--green">Support</div>
+        <h2>We've got your back.<br>Every mile of the way.</h2>
+        <p>Have a question, found a bug, or just want to say you finished your first 5K? Send us a message and we'll get back to you within one business day.</p>
+        <div class="contact-detail"><span>📧</span> support@legacyofthorns.com</div>
+        <div class="contact-detail"><span>⏱️</span> Response within 1 business day</div>
+        <div class="contact-detail"><span>📱</span> iOS App — Run Fight Win</div>
+      </div>
+
+      <div class="reveal">
+        <div class="support-form" id="supportForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>First Name</label>
+              <input type="text" id="fname" placeholder="Jane" />
+            </div>
+            <div class="form-group">
+              <label>Last Name</label>
+              <input type="text" id="lname" placeholder="Doe" />
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Email Address</label>
+            <input type="email" id="email" placeholder="jane@example.com" />
+          </div>
+          <div class="form-group">
+            <label>Topic</label>
+            <select id="topic">
+              <option value="">Select a topic…</option>
+              <option>Account &amp; Subscription</option>
+              <option>Bug Report</option>
+              <option>Feature Request</option>
+              <option>Training Plan Question</option>
+              <option>GPS / Map Issue</option>
+              <option>Audio / Voice Coach</option>
+              <option>General Question</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Message</label>
+            <textarea id="message" rows="5" placeholder="Tell us what's going on…"></textarea>
+          </div>
+          <button class="submit-btn" onclick="submitForm()">Send Message →</button>
+        </div>
+        <div class="form-success" id="formSuccess">
+          ✅ Message sent! We'll be in touch within one business day.
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-logo">
+        <span style="color:var(--green)">RUN</span>&nbsp;<span style="color:var(--pink);font-weight:400">FIGHT</span>&nbsp;<span style="color:var(--orange)">WIN</span>
+      </div>
+      <div class="footer-links">
+        <a href="#features">Features</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#faq">FAQ</a>
+        <a href="#support">Support</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Use</a>
+      </div>
+    </div>
+    <div class="footer-copy">© 2026 Legacy of Thorns. Run Fight Win is available on the iOS App Store.</div>
+  </div>
+</footer>
+
+<script>
+  /* FAQ accordion */
+  document.querySelectorAll('.faq-q').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const item = btn.closest('.faq-item');
+      const isOpen = item.classList.contains('open');
+      document.querySelectorAll('.faq-item.open').forEach(i => i.classList.remove('open'));
+      if (!isOpen) item.classList.add('open');
+      btn.setAttribute('aria-expanded', !isOpen);
+    });
+  });
+
+  /* Scroll reveal */
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  /* Form submit (no backend — opens mailto as fallback) */
+  function submitForm() {
+    const fname   = document.getElementById('fname').value.trim();
+    const lname   = document.getElementById('lname').value.trim();
+    const email   = document.getElementById('email').value.trim();
+    const topic   = document.getElementById('topic').value;
+    const message = document.getElementById('message').value.trim();
+
+    if (!fname || !email || !message) {
+      alert('Please fill in your name, email, and message before sending.');
+      return;
+    }
+    if (!email.includes('@')) {
+      alert('Please enter a valid email address.');
+      return;
+    }
+
+    /* Build mailto link as a real fallback */
+    const subject = encodeURIComponent(`[RFW Support] ${topic || 'General'} — ${fname} ${lname}`);
+    const body    = encodeURIComponent(`Name: ${fname} ${lname}\nEmail: ${email}\nTopic: ${topic}\n\n${message}`);
+    window.location.href = `mailto:support@legacyofthorns.com?subject=${subject}&body=${body}`;
+
+    /* Show success state */
+    document.getElementById('supportForm').style.display = 'none';
+    document.getElementById('formSuccess').style.display = 'block';
+  }
+</script>
+</body>
+</html>
